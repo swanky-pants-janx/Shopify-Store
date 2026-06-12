@@ -14,46 +14,41 @@
     <h2 class="filter-tabs__heading">{{ section.settings.heading }}</h2>
   {%- endif -%}
 
+  {%- comment -%}
+    ── MENU BAR ─────────────────────────────────────────────────────
+    Add/rename/remove tabs here. Each button's aria-controls must
+    match the id of its panel below. Put "active" (and
+    aria-selected="true") on whichever tab should open first.
+  {%- endcomment -%}
   <div class="filter-tabs__bar" role="tablist">
     <span class="filter-tabs__pill" data-pill aria-hidden="true"></span>
-    {%- for block in section.blocks -%}
-      <button
-        class="filter-btn{% if forloop.first %} active{% endif %}"
-        type="button"
-        role="tab"
-        aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-        aria-controls="panel-{{ section.id }}-{{ forloop.index }}"
-        data-tab-index="{{ forloop.index }}"
-        {{ block.shopify_attributes }}
-      >
-        {{ block.settings.title }}
-      </button>
-    {%- endfor -%}
+    <button class="filter-btn active" type="button" role="tab" aria-selected="true" aria-controls="panel-{{ section.id }}-1">All</button>
+    <button class="filter-btn" type="button" role="tab" aria-selected="false" aria-controls="panel-{{ section.id }}-2">New Arrivals</button>
+    <button class="filter-btn" type="button" role="tab" aria-selected="false" aria-controls="panel-{{ section.id }}-3">Best Sellers</button>
   </div>
 
-  {%- for block in section.blocks -%}
-    <div
-      class="filter-tabs__panel"
-      id="panel-{{ section.id }}-{{ forloop.index }}"
-      role="tabpanel"
-      {% unless forloop.first %}hidden{% endunless %}
-    >
-      {%- if block.settings.image != blank -%}
-        <div class="filter-tabs__image">
-          {{ block.settings.image | image_url: width: 1500 | image_tag: widths: '750, 1100, 1500', loading: 'lazy' }}
-        </div>
-      {%- endif -%}
-      {%- if block.settings.panel_heading != blank -%}
-        <h3 class="filter-tabs__panel-heading">{{ block.settings.panel_heading }}</h3>
-      {%- endif -%}
-      {%- if block.settings.content != blank -%}
-        <div class="filter-tabs__content rte">{{ block.settings.content }}</div>
-      {%- endif -%}
-      {%- if block.settings.page != blank -%}
-        <div class="filter-tabs__content rte">{{ block.settings.page.content }}</div>
-      {%- endif -%}
-    </div>
-  {%- endfor -%}
+  {%- comment -%}
+    ── PANELS ───────────────────────────────────────────────────────
+    One panel per tab, in the same order as the buttons. Put any
+    HTML/Liquid you want inside each panel — your own divs, classes,
+    images, product loops, snippets ({% render 'my-snippet' %}), etc.
+    Every panel except the first needs the `hidden` attribute.
+  {%- endcomment -%}
+
+  <div class="filter-tabs__panel" id="panel-{{ section.id }}-1" role="tabpanel">
+    <h3>All</h3>
+    <p>Custom HTML for the first tab goes here.</p>
+  </div>
+
+  <div class="filter-tabs__panel" id="panel-{{ section.id }}-2" role="tabpanel" hidden>
+    <h3>New Arrivals</h3>
+    <p>Custom HTML for the second tab goes here.</p>
+  </div>
+
+  <div class="filter-tabs__panel" id="panel-{{ section.id }}-3" role="tabpanel" hidden>
+    <h3>Best Sellers</h3>
+    <p>Custom HTML for the third tab goes here.</p>
+  </div>
 </div>
 
 {% stylesheet %}
@@ -193,12 +188,6 @@
     positionInitial();
     window.addEventListener('resize', positionInitial);
     if (document.fonts) document.fonts.ready.then(positionInitial);
-
-    // Theme editor: selecting a block in the sidebar shows its tab
-    document.addEventListener('shopify:block:select', (event) => {
-      const index = buttons.findIndex((btn) => btn.contains(event.target) || btn === event.target);
-      if (index >= 0 && section.contains(event.target)) activate(index);
-    });
   })();
 </script>
 
@@ -239,68 +228,9 @@
       "default": 48
     }
   ],
-  "blocks": [
-    {
-      "type": "tab",
-      "name": "Tab",
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Menu label",
-          "default": "Tab"
-        },
-        {
-          "type": "text",
-          "id": "panel_heading",
-          "label": "Panel heading"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content",
-          "default": "<p>Add your content for this tab here.</p>"
-        },
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image (optional)"
-        },
-        {
-          "type": "page",
-          "id": "page",
-          "label": "Or pull content from a page"
-        }
-      ]
-    }
-  ],
-  "max_blocks": 8,
   "presets": [
     {
-      "name": "Filter Tabs",
-      "blocks": [
-        {
-          "type": "tab",
-          "settings": {
-            "title": "All",
-            "content": "<p>This is the first tab. Each tab is a block — edit the label and content in the sidebar.</p>"
-          }
-        },
-        {
-          "type": "tab",
-          "settings": {
-            "title": "New Arrivals",
-            "content": "<p>Content for the second tab goes here.</p>"
-          }
-        },
-        {
-          "type": "tab",
-          "settings": {
-            "title": "Best Sellers",
-            "content": "<p>Content for the third tab goes here.</p>"
-          }
-        }
-      ]
+      "name": "Filter Tabs"
     }
   ]
 }
