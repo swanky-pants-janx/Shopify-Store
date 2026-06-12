@@ -10,7 +10,7 @@
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
-  class="filter-tabs filter-tabs--{{ section.settings.menu_alignment }} filter-tabs--{{ section.settings.menu_size }}{% unless section.settings.show_border %} filter-tabs--no-border{% endunless %}{% if section.settings.accent_pill %} filter-tabs--accent{% endif %} section section--page-width color-{{ section.settings.color_scheme }} spacing-style"
+  class="filter-tabs filter-tabs--{{ section.settings.menu_alignment }} filter-tabs--{{ section.settings.menu_size }}{% unless section.settings.show_border %} filter-tabs--no-border{% endunless %}{% if section.settings.accent_pill %} filter-tabs--accent{% endif %}{% if section.settings.sticky %} filter-tabs--sticky-{{ section.settings.sticky_position }}{% endif %} section section--page-width color-{{ section.settings.color_scheme }} spacing-style"
   style="{% render 'spacing-style', settings: section.settings %}"
   id="filter-tabs-{{ section.id }}"
 >
@@ -90,6 +90,29 @@
 
   .filter-tabs--no-border .filter-tabs__bar {
     border-color: transparent;
+  }
+
+  /* Sticky: the position has to go on the .shopify-section wrapper so the
+     section background (a sibling of .filter-tabs) sticks along with it. */
+  .shopify-section:has(.filter-tabs--sticky-top) {
+    position: sticky;
+    top: 0;
+    z-index: var(--layer-sticky, 10);
+  }
+
+  /* When the theme header is set to always stay on screen, stick below it */
+  body:has(#header-component[sticky='always']) .shopify-section:has(.filter-tabs--sticky-top) {
+    top: var(--header-height, 60px);
+  }
+
+  /* Bottom uses fixed: sticky can't pin an element below content that
+     comes after it in the page, so this becomes a docked bar. */
+  .shopify-section:has(.filter-tabs--sticky-bottom) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--layer-sticky, 10);
   }
 
   .filter-tabs__bar::-webkit-scrollbar {
@@ -289,6 +312,24 @@
       "id": "accent_pill",
       "label": "Use accent color for active tab",
       "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Sticky menu",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "sticky_position",
+      "label": "Sticky position",
+      "options": [
+        { "value": "top", "label": "Top of screen" },
+        { "value": "bottom", "label": "Bottom of screen" }
+      ],
+      "default": "top",
+      "visible_if": "{{ section.settings.sticky }}",
+      "info": "Bottom pins the menu as a floating dock at the bottom of the screen."
     },
     {
       "type": "color_scheme",
