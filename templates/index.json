@@ -1747,12 +1747,66 @@
         "link": "https://b1vasj-xm.myshopify.com/?pb=0",
         "open_new_tab": true,
         "icon_image": "shopify://shop_images/social.png",
-        "fallback_color": "#25D366",
+        "fallback_color": "#25d366",
         "bubble_size": 60,
         "position": "bottom-right",
         "offset_vertical": 20,
         "offset_horizontal": 20,
         "aria_label": "Chat with us"
+      }
+    },
+    "filter_tabs_MY4ABj": {
+      "type": "filter-tabs",
+      "blocks": {
+        "tab_XPh6jf": {
+          "type": "tab",
+          "settings": {
+            "title": "Tab",
+            "panel_heading": "",
+            "content": "<p>Add your content for this tab here.</p>",
+            "page": "shop-page"
+          }
+        },
+        "tab_3QpyFh": {
+          "type": "tab",
+          "settings": {
+            "title": "All",
+            "panel_heading": "",
+            "content": "<p>This is the first tab. Each tab is a block — edit the label and content in the sidebar.</p>",
+            "page": ""
+          }
+        },
+        "tab_V34466": {
+          "type": "tab",
+          "settings": {
+            "title": "New Arrivals",
+            "panel_heading": "",
+            "content": "<p>Content for the second tab goes here.</p>",
+            "page": ""
+          }
+        },
+        "tab_FCLYrA": {
+          "type": "tab",
+          "settings": {
+            "title": "Best Sellers",
+            "panel_heading": "",
+            "content": "<p>Content for the third tab goes here.</p>",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "tab_XPh6jf",
+        "tab_3QpyFh",
+        "tab_V34466",
+        "tab_FCLYrA"
+      ],
+      "name": "Filter Tabs",
+      "settings": {
+        "heading": "",
+        "color_scheme": "scheme-d754edea-65b2-443a-837c-2196aed767c6",
+        "padding-block-start": 48,
+        "padding-block-end": 48
       }
     }
   },
@@ -1768,6 +1822,7 @@
     "section_TLbGre",
     "section_yxPeKC",
     "section_y7TMrG",
-    "chat_bubble_JCdk4d"
+    "chat_bubble_JCdk4d",
+    "filter_tabs_MY4ABj"
   ]
 }
