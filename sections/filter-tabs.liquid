@@ -1,53 +1,36 @@
 {%- comment -%}
   Filter Tabs — pill-style menu bar where each block is a tab.
-  Clicking a pill swaps the visible content panel below (no page reload).
+
+  HOW IT LINKS TO OTHER SECTIONS:
+  The sections placed DIRECTLY BELOW this one in the theme editor become
+  the tab panels, in order. One tab = one section. Tab 1 shows the first
+  section below, tab 2 the second, etc. Add as many tabs (blocks) as you
+  have sections. Any section type works, including custom ones.
 {%- endcomment -%}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div
   class="filter-tabs section section--page-width color-{{ section.settings.color_scheme }} spacing-style"
   style="{% render 'spacing-style', settings: section.settings %}"
-  data-filter-tabs
   id="filter-tabs-{{ section.id }}"
 >
   {%- if section.settings.heading != blank -%}
     <h2 class="filter-tabs__heading">{{ section.settings.heading }}</h2>
   {%- endif -%}
 
-  {%- comment -%}
-    ── MENU BAR ─────────────────────────────────────────────────────
-    Add/rename/remove tabs here. Each button's aria-controls must
-    match the id of its panel below. Put "active" (and
-    aria-selected="true") on whichever tab should open first.
-  {%- endcomment -%}
   <div class="filter-tabs__bar" role="tablist">
     <span class="filter-tabs__pill" data-pill aria-hidden="true"></span>
-    <button class="filter-btn active" type="button" role="tab" aria-selected="true" aria-controls="panel-{{ section.id }}-1">All</button>
-    <button class="filter-btn" type="button" role="tab" aria-selected="false" aria-controls="panel-{{ section.id }}-2">New Arrivals</button>
-    <button class="filter-btn" type="button" role="tab" aria-selected="false" aria-controls="panel-{{ section.id }}-3">Best Sellers</button>
-  </div>
-
-  {%- comment -%}
-    ── PANELS ───────────────────────────────────────────────────────
-    One panel per tab, in the same order as the buttons. Put any
-    HTML/Liquid you want inside each panel — your own divs, classes,
-    images, product loops, snippets ({% render 'my-snippet' %}), etc.
-    Every panel except the first needs the `hidden` attribute.
-  {%- endcomment -%}
-
-  <div class="filter-tabs__panel" id="panel-{{ section.id }}-1" role="tabpanel">
-    <h3>All</h3>
-    <p>Custom HTML for the first tab goes here.</p>
-  </div>
-
-  <div class="filter-tabs__panel" id="panel-{{ section.id }}-2" role="tabpanel" hidden>
-    <h3>New Arrivals</h3>
-    <p>Custom HTML for the second tab goes here.</p>
-  </div>
-
-  <div class="filter-tabs__panel" id="panel-{{ section.id }}-3" role="tabpanel" hidden>
-    <h3>Best Sellers</h3>
-    <p>Custom HTML for the third tab goes here.</p>
+    {%- for block in section.blocks -%}
+      <button
+        class="filter-btn{% if forloop.first %} active{% endif %}"
+        type="button"
+        role="tab"
+        aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+        {{ block.settings.title }}
+      </button>
+    {%- endfor -%}
   </div>
 </div>
 
@@ -118,21 +101,12 @@
     color: var(--white);
   }
 
-  .filter-tabs__panel {
-    margin-block-start: 2rem;
+  .filter-tabs-panel--hidden {
+    display: none !important;
+  }
+
+  .filter-tabs-panel--visible {
     animation: filter-tabs-fade-in 0.35s ease;
-  }
-
-  .filter-tabs__image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: var(--border-radius-sm, 8px);
-    margin-block-end: 1.25rem;
-  }
-
-  .filter-tabs__content {
-    max-width: 60rem;
-    margin-inline: auto;
   }
 
   @keyframes filter-tabs-fade-in {
@@ -149,45 +123,90 @@
 
 <script>
   (() => {
-    const section = document.getElementById('filter-tabs-{{ section.id }}');
-    if (!section) return;
+    const TAB_COUNT = {{ section.blocks.size }};
 
-    const bar = section.querySelector('.filter-tabs__bar');
-    const pill = section.querySelector('[data-pill]');
-    const buttons = [...section.querySelectorAll('.filter-btn')];
-    const panels = [...section.querySelectorAll('.filter-tabs__panel')];
+    const init = () => {
+      const section = document.getElementById('filter-tabs-{{ section.id }}');
+      if (!section) return;
 
-    const movePill = (btn) => {
-      pill.style.width = `${btn.offsetWidth}px`;
-      pill.style.transform = `translateX(${btn.offsetLeft}px)`;
-    };
+      const wrapper = section.closest('.shopify-section') || section;
+      const pill = section.querySelector('[data-pill]');
+      const buttons = [...section.querySelectorAll('.filter-btn')];
 
-    const activate = (index) => {
-      buttons.forEach((btn, i) => {
-        const isActive = i === index;
-        btn.classList.toggle('active', isActive);
-        btn.setAttribute('aria-selected', isActive);
-        if (isActive) movePill(btn);
-      });
-      panels.forEach((panel, i) => {
-        panel.hidden = i !== index;
-      });
-    };
+      // The sections immediately following this one are the tab panels
+      const collectPanels = () => {
+        const panels = [];
+        let el = wrapper.nextElementSibling;
+        while (el && panels.length < TAB_COUNT) {
+          if (el.classList.contains('shopify-section')) panels.push(el);
+          el = el.nextElementSibling;
+        }
+        return panels;
+      };
 
-    buttons.forEach((btn, i) => btn.addEventListener('click', () => activate(i)));
+      let panels = collectPanels();
 
-    const positionInitial = () => {
-      const current = section.querySelector('.filter-btn.active');
-      if (current) {
-        pill.style.transition = 'none';
-        movePill(current);
-        requestAnimationFrame(() => (pill.style.transition = ''));
+      const movePill = (btn) => {
+        pill.style.width = `${btn.offsetWidth}px`;
+        pill.style.transform = `translateX(${btn.offsetLeft}px)`;
+      };
+
+      const activate = (index, animate = true) => {
+        buttons.forEach((btn, i) => {
+          const isActive = i === index;
+          btn.classList.toggle('active', isActive);
+          btn.setAttribute('aria-selected', isActive);
+          if (isActive) movePill(btn);
+        });
+        panels.forEach((panel, i) => {
+          panel.classList.toggle('filter-tabs-panel--hidden', i !== index);
+          panel.classList.toggle('filter-tabs-panel--visible', animate && i === index);
+        });
+      };
+
+      buttons.forEach((btn, i) => btn.addEventListener('click', () => activate(i)));
+
+      const currentIndex = () => buttons.findIndex((btn) => btn.classList.contains('active'));
+
+      const positionInitial = () => {
+        const current = buttons[currentIndex()];
+        if (current) {
+          pill.style.transition = 'none';
+          movePill(current);
+          requestAnimationFrame(() => (pill.style.transition = ''));
+        }
+      };
+
+      activate(Math.max(currentIndex(), 0), false);
+      positionInitial();
+      window.addEventListener('resize', positionInitial);
+      if (document.fonts) document.fonts.ready.then(positionInitial);
+
+      // Theme editor support: re-detect panels when sections are added,
+      // removed, or reordered, and reveal a panel when it's selected.
+      if (window.Shopify && window.Shopify.designMode) {
+        const refresh = () => {
+          panels.forEach((panel) =>
+            panel.classList.remove('filter-tabs-panel--hidden', 'filter-tabs-panel--visible')
+          );
+          panels = collectPanels();
+          activate(Math.max(currentIndex(), 0), false);
+        };
+        ['shopify:section:load', 'shopify:section:unload', 'shopify:section:reorder'].forEach((evt) =>
+          document.addEventListener(evt, refresh)
+        );
+        document.addEventListener('shopify:section:select', (event) => {
+          const index = panels.indexOf(event.target);
+          if (index >= 0) activate(index, false);
+        });
       }
     };
 
-    positionInitial();
-    window.addEventListener('resize', positionInitial);
-    if (document.fonts) document.fonts.ready.then(positionInitial);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
   })();
 </script>
 
@@ -196,6 +215,10 @@
   "name": "Filter Tabs",
   "tag": "section",
   "settings": [
+    {
+      "type": "paragraph",
+      "content": "Each tab controls one of the sections placed directly below this one, in order: tab 1 shows the first section below, tab 2 the second, and so on."
+    },
     {
       "type": "text",
       "id": "heading",
@@ -228,9 +251,29 @@
       "default": 48
     }
   ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Menu label",
+          "default": "Tab"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
   "presets": [
     {
-      "name": "Filter Tabs"
+      "name": "Filter Tabs",
+      "blocks": [
+        { "type": "tab", "settings": { "title": "All" } },
+        { "type": "tab", "settings": { "title": "New Arrivals" } },
+        { "type": "tab", "settings": { "title": "Best Sellers" } }
+      ]
     }
   ]
 }
