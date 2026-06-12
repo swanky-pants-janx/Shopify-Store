@@ -9,6 +9,17 @@
  */
 {
   "sections": {
+    "custom_liquid_HJcraq": {
+      "type": "custom-liquid",
+      "name": "t:names.custom_liquid",
+      "settings": {
+        "custom_liquid": "<div id=\"top-of-page-contact\"></div>",
+        "color_scheme": "",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "main": {
       "type": "main-page",
       "blocks": {
@@ -146,6 +157,7 @@
     }
   },
   "order": [
+    "custom_liquid_HJcraq",
     "main",
     "form"
   ]
