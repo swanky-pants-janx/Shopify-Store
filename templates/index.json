@@ -1697,7 +1697,7 @@
           "settings": {
             "label": "To the Top",
             "link": "shopify://collections/all",
-            "anchor_link": "#top-of-page-contact",
+            "anchor_link": "#top-of-page",
             "open_in_new_tab": false,
             "style_class": "button",
             "width": "fit-content",
