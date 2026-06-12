@@ -1745,7 +1745,7 @@
       "name": "Chat Bubble",
       "settings": {
         "link": "https://b1vasj-xm.myshopify.com/?pb=0",
-        "open_new_tab": false,
+        "open_new_tab": true,
         "icon_image": "shopify://shop_images/social.png",
         "fallback_color": "#25d366",
         "bubble_size": 60,
