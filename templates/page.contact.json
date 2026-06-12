@@ -143,45 +143,10 @@
         "padding-block-start": 32,
         "padding-block-end": 84
       }
-    },
-    "filter_tabs_RRY7MH": {
-      "type": "filter-tabs",
-      "blocks": {
-        "tab_teCT9V": {
-          "type": "tab",
-          "settings": {
-            "title": "New Arrivals"
-          }
-        },
-        "tab_9JCM49": {
-          "type": "tab",
-          "settings": {
-            "title": "Best Sellers"
-          }
-        }
-      },
-      "block_order": [
-        "tab_teCT9V",
-        "tab_9JCM49"
-      ],
-      "name": "Filter Tabs",
-      "settings": {
-        "heading": "",
-        "menu_alignment": "center",
-        "menu_size": "medium",
-        "show_border": true,
-        "accent_pill": false,
-        "sticky": true,
-        "sticky_position": "top",
-        "color_scheme": "scheme-d754edea-65b2-443a-837c-2196aed767c6",
-        "padding-block-start": 48,
-        "padding-block-end": 48
-      }
     }
   },
   "order": [
     "main",
-    "form",
-    "filter_tabs_RRY7MH"
+    "form"
   ]
 }
