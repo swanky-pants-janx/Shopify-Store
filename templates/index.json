@@ -584,8 +584,8 @@
     "1781114282d861ff78": {
       "type": "_blocks",
       "blocks": {
-        "ai_gen_block_b01ca6e_fPe4BV": {
-          "type": "ai_gen_block_b01ca6e",
+        "janx_image_marquee_fPe4BV": {
+          "type": "janx-image-marquee",
           "settings": {
             "image_1": "shopify://shop_images/creamy.jpg",
             "image_2": "shopify://shop_images/sandy.jpg",
@@ -605,7 +605,7 @@
         }
       },
       "block_order": [
-        "ai_gen_block_b01ca6e_fPe4BV"
+        "janx_image_marquee_fPe4BV"
       ],
       "settings": {
         "content_direction": "column",
@@ -1741,7 +1741,7 @@
       }
     },
     "chat_bubble_JCdk4d": {
-      "type": "chat-bubble",
+      "type": "janx-chat-bubble",
       "name": "Chat Bubble",
       "settings": {
         "link": "https://b1vasj-xm.myshopify.com/?pb=0",
@@ -1756,7 +1756,7 @@
       }
     },
     "filter_tabs_MY4ABj": {
-      "type": "filter-tabs",
+      "type": "janx-filter-tabs",
       "blocks": {
         "tab_XPh6jf": {
           "type": "tab",
