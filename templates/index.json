@@ -180,7 +180,7 @@
               "type": "text",
               "name": "t:names.heading",
               "settings": {
-                "text": "<h2>New arrivals</h2>",
+                "text": "<h2>Pause</h2>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -219,7 +219,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
+                "text": "<p>Between one heartbeat and the next, there is a pause. A quiet space where calm lives. At Shepstone Spa, we hold that space for you. Gentle grounding, and deeply restorative. Each moment here is a chance to return to yourself.We invite you to... pause</p>",
                 "width": "fit-content",
                 "max_width": "narrow",
                 "alignment": "left",
